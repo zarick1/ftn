@@ -1,0 +1,411 @@
+1.Izračunati sumu elemenata niza X_BX_InputBuffer gde vrednosti parnih elemenata niza treba 
+podeliti sa 4, a vrednosti neparnih elemenata niza treba podeliti sa -2. Rezultat sume 
+smestiti u globalnu promenljivu u Y memoriji pod nazivom X_VY_sum. Potrebno je alocirati
+memoriju za izlaznu promenljivu veličine jedne reči.
+
+C kod:
+
+for (int i = 0; i < n; ++i)
+	a += (i % 2) ? b[i] / 4 : b[i] / -2;
+
+################################################################################
+##*/**
+##** @file AADSP2-Assignment01.a
+##**
+##** Module: AADSP2-Assignment01
+##** Description:
+##** $Source: $
+##** $Revision: $
+##** $Date: $
+##** $Author: $
+##**
+##**/
+################################################################################
+_AADSP2_Assignment01_a_
+
+################################################################################
+	.public X_S_Task01
+################################################################################
+
+AADSP2_Assignment01_xdata .xdata_ovly .align(16)
+
+X_BX_InputBuffer		.dw	0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 0.10, 0.11, 0.12, 0.13, 0.14, 0.15, 0.16
+
+
+AADSP2_Assignment01_ydata .ydata_ovly
+
+X_VY_sum	.bss (1)
+	#----------------------------------
+
+AADSP2_Assignment01_code	.code_ovly
+
+
+################################################################################
+##*/**
+##** Function: X_S_Task01
+##**
+##** @param
+##**
+##** @return
+##**
+##** Trashes:	a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3, y0, y1, y2, y3, i0, i1, i2, i3, i4, i5, i6, i7, nm0, nm1, nm2, nm3, nm4, nm5, nm6, nm7
+##** Comment:
+##**/
+################################################################################
+X_S_Task01
+
+	#X_VY_sum	.bss (1)
+
+	#TODO:
+	i0 = (X_BX_InputBuffer)
+	i1 = (X_BX_InputBuffer)
+	nop
+	i1+=1
+	nm0 = (0x3002)
+	nm1 = (0x3002)
+	a0 = (0)
+	
+	do(8),>loop
+		a1 = xmem[i0]
+		b1 = xmem[i1]
+		
+		a1 = a1 >> 1
+		a1 = a1 >> 1
+		nop
+		
+		b1 = b1 >> 1
+		b1 = ~b1
+		nop
+		b1g = (0xFF)
+		
+		a0 = a0 + a1
+		a0 = a0 + b1
+		nop
+		
+		i0+=n
+%loop:	i1+=n
+	
+	ymem[X_VY_sum] = a0
+	
+	nm0 = (0)
+	nm1 = (0)
+	#----------------------------------
+
+#%X_S_Task01_End:
+#-------------------------------------------------------------------------------
+  ret
+
+
+#############################################################################################################################
+2.Implementirati funkciju koja redom čita elemente niza X_BX_InputBuffer1, obrnutim redosledom
+ čita elemente niza X_BY_InputBuffer2 i računa proizvod odgovarajućih elemenata. Zatim u 
+slučaju da je rezultat veći od vrednosti 0.1875, u izlazni niz X_BY_OutputBuffer na indeks 
+koji odgovara elementu iz niza X_BX_InputBuffer1 upisati vrednost 1, u suprotnom upisati 
+vrednost 0.
+ Potrebno je alocirati memoriju za izlazni niz.
+
+C kod:
+
+for (int i = 0; i < n; ++i)
+{
+	float tmp = x[i] * y[n-i-1];
+	if (tmp > 0.1875)
+		z[i] = 0
+	else
+		z[i] = 1
+}
+
+
+################################################################################
+##*/**
+##** @file AADSP2-Assignment01.a
+##**
+##** Module: AADSP2-Assignment01
+##** Description:
+##** $Source: $
+##** $Revision: $
+##** $Date: $
+##** $Author: $
+##**
+##**/
+################################################################################
+_AADSP2_Assignment01_a_
+
+################################################################################
+	.public X_S_Task01
+################################################################################
+
+AADSP2_Assignment01_xdata .xdata_ovly .align(16)
+
+
+X_BX_InputBuffer1		.dw	0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.11, 0.22, 0.33, 0.44, 0.55, 0.66, 0.77
+
+
+AADSP2_Assignment01_ydata .ydata_ovly
+
+X_BY_InputBuffer2		.dw 0.5, 0.10, 0.15, 0.4, 0.8, 0.16, 0.3, 0.52, 0.11, 0.6, 0.25, 0.41, 0.12, 0.18, 0.22, 0.75
+
+X_BY_OutputBuffer		.bss (16)
+	#----------------------------------
+
+AADSP2_Assignment01_code	.code_ovly
+
+################################################################################
+##*/**
+##** Function: X_S_Task01
+##**
+##** @param
+##**
+##** @return
+##**
+##** Trashes:	a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3, y0, y1, y2, y3, i0, i1, i2, i3, i4, i5, i6, i7, nm0, nm1, nm2, nm3, nm4, nm5, nm6, nm7
+##** Comment:
+##**/
+################################################################################
+X_S_Task01
+
+	#X_BY_OutputBuffer	.bss (16)
+
+	#TODO:
+	i0 = (X_BX_InputBuffer1)
+	i1 = (X_BY_InputBuffer2)
+	i2 = (X_BY_OutputBuffer)
+	nop
+	i1 = i1 + (15)
+	
+	a1 = (0)
+	fixed16(b1h) = (0x8000)
+	
+	fixed16(b0h) = (0x1800)
+	
+	do(16),>loop
+		x0 = xmem[i0]
+		y0 = ymem[i1]
+		a0 = x0 * y0
+		
+		a0 - b0
+		if(a > 0) jmp>else
+		ymem[i2] = a1
+		jmp>next
+%else:
+		ymem[i2] = b1
+%next	
+		i0+=1
+		i1-=1
+%loop:	i2+=1
+	#----------------------------------
+
+#%X_S_Task01_End:
+#-------------------------------------------------------------------------------
+  ret
+
+
+
+
+#############################################################################################################################
+3.Implementirati funkciju koja ucitava elemente niza X_BX_InputBuffer i prebacuje ih u u 
+izlazni niz u Y memoriji X_BY_OutputBuffer, gde svaki treći element množi sa 0.375 a svaki 
+peti sa 0.625. Potrebno je alocirati memoriju za izlazni niz.
+
+C kod:
+
+for (int i = 0; i < n; ++i)
+{
+    float temp = a[i];
+    temp *= (i % 3) ? 1 : 0.375;
+    temp *= (i % 5) ? 1 : 0.625;
+    b[i] = temp;
+}
+
+
+################################################################################
+##*/**
+##** @file AADSP2-Assignment01.a
+##**
+##** Module: AADSP2-Assignment01
+##** Description:
+##** $Source: $
+##** $Revision: $
+##** $Date: $
+##** $Author: $
+##**
+##**/
+################################################################################
+_AADSP2_Assignment01_a_
+
+################################################################################
+	.public X_S_Task01
+################################################################################
+
+AADSP2_Assignment01_xdata .xdata_ovly .align(16)
+
+
+X_BX_InputBuffer		.dw	0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.11, 0.22, 0.33, 0.44, 0.55, 0.66, 0.77
+
+
+AADSP2_Assignment01_ydata .ydata_ovly
+
+X_BY_OutputBuffer	.bss (16)
+	#----------------------------------
+
+AADSP2_Assignment01_code	.code_ovly
+
+################################################################################
+##*/**fixed16(b0h) = (0x1800)
+##** Function: X_S_Task01
+##**
+##** @param
+##**
+##** @return
+##**
+##** Trashes:	a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3, y0, y1, y2, y3, i0, i1, i2, i3, i4, i5, i6, i7, nm0, nm1, nm2, nm3, nm4, nm5, nm6, nm7
+##** Comment:
+##**/
+################################################################################
+X_S_Task01
+
+	#X_BY_OutputBuffer	.bss (16)
+	
+	#TODO:
+	i0 = (X_BX_InputBuffer)
+	i1 = (X_BY_OutputBuffer)	
+	
+	fixed16(x0) = (0x3000)	# 0.375
+	fixed16(y0) = (0x5000)	# 0.625
+	
+	do(16),>loop
+		a1 = xmem[i0]
+		ymem[i1] = a1
+		i0+=1
+%loop:	i1+=1
+
+	nm0 = (0x3003)
+	nm1 = (0x3003)
+	i0 = (X_BX_InputBuffer)
+	i1 = (X_BY_OutputBuffer)
+	i0+=n
+	i1+=n
+	
+	do(5),>loop
+		x1 = xmem[i0]
+		a1 = x1 * x0
+		ymem[i1] = a1
+		i0+=n
+%loop:	i1+=n
+
+	nm0 = (0x3005)
+	nm1 = (0x3005)
+	i0 = (X_BX_InputBuffer)
+	i1 = (X_BY_OutputBuffer)
+	i0+=n
+	i1+=n
+	
+	do(3),>loop
+		x1 = xmem[i0]
+		a1 = x1 * y0
+		ymem[i1] = a1
+		i0+=n
+%loop:	i1+=n
+
+	nm0 = (0)
+	nm1 = (0)
+	#----------------------------------
+
+#%X_S_Task01_End:
+#-------------------------------------------------------------------------------
+  ret
+
+
+
+
+
+#############################################################################################################################
+4.Implementirati funkciju koja redom čita elemente niza X_BX_InputBuffer i zatim elemente 
+sa parnim indeksom upisuje u gornjih 32 bita izlaznog bafera u L memoriji X_BL_OutputBuffer,
+ a negativnu vrednost elemenata sa neparnim indeksom smesiti u donjih 32 bita.
+
+C kod:
+
+int64_t *b;
+int32_t *a;
+for (int i = 0; i < n / 2; ++i)
+{
+    b[i] = (a[2 * i] << 32) | (-a[2 * i + 1]);
+}
+
+
+################################################################################
+##*/**
+##** @file AADSP2-Assignment01.a
+##**
+##** Module: AADSP2-Assignment01
+##** Description:
+##** $Source: $
+##** $Revision: $
+##** $Date: $
+##** $Author: $
+##**
+##**/
+################################################################################
+_AADSP2_Assignment01_a_
+
+################################################################################
+	.public X_S_Task01
+################################################################################
+
+AADSP2_Assignment01_xdata .xdata_ovly .align(16)
+
+
+X_BX_InputBuffer		.dw	0.9, 0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1, 0.11, 0.22, 0.33, 0.44, 0.55, 0.66, 0.77
+
+
+AADSP2_Assignment01_ydata .ydata_ovly
+
+AADSP2_Assignment01_ydata .ydata_ovly
+
+X_BL_OutputBuffer	.bss (8)
+	#----------------------------------
+
+AADSP2_Assignment01_code	.code_ovly
+
+################################################################################
+##*/**
+##** Function: X_S_Task01
+##**
+##** @param
+##**
+##** @return
+##**
+##** Trashes:	a0, a1, a2, a3, b0, b1, b2, b3, x0, x1, x2, x3, y0, y1, y2, y3, i0, i1, i2, i3, i4, i5, i6, i7, nm0, nm1, nm2, nm3, nm4, nm5, nm6, nm7
+##** Comment:
+##**/
+################################################################################
+X_S_Task01
+
+	#AADSP2_Assignment01_ydata .ydata_ovly
+	# X_BL_OutputBuffer	.bss (20)
+	
+	#TODO:
+	i0 = (X_BX_InputBuffer)
+	i1 = (X_BX_InputBuffer)
+	i2 = (X_BL_OutputBuffer)
+	i1+=1
+	
+	do(8),>loop
+		a0 = xmem[i0]
+		b0 = xmem[i1]
+		b0 = ~b0
+		#bog = (0xFF)
+		
+		xmem[i2] = a0
+		ymem[i2] = b0
+
+		i0+=2
+		i1+=2
+%loop:	i2+=1
+
+	#----------------------------------
+
+#%X_S_Task01_End:
+#-------------------------------------------------------------------------------
+  ret
